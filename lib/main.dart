@@ -1,3 +1,4 @@
+import 'package:chella/features/Authentication/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -9,18 +10,10 @@ class Chella extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: Homescreen());
-  }
-}
-
-class Homescreen extends StatelessWidget {
-  const Homescreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Chella")),
-      body: Center(child: Text("Hello from chella")),
+    return MaterialApp(
+      // theme: AppTheme.darkTheme,
+      debugShowCheckedModeBanner: false,
+      home: Loginpage(),
     );
   }
 }
