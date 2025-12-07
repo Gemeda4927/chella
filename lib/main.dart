@@ -1,19 +1,21 @@
-import 'package:chella/features/Authentication/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:chella/core/theme/app_theme.dart';
+import 'package:chella/features/Authentication/presentation/pages/login_page.dart';
 
 void main() {
-  runApp(Chella());
+  runApp(const MyApp());
 }
 
-class Chella extends StatelessWidget {
-  const Chella({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // theme: AppTheme.darkTheme,
+      title: 'Chella',
       debugShowCheckedModeBanner: false,
-      home: Loginpage(),
+      theme: AppTheme.lightTheme,
+      home: const LoginPage(),
     );
   }
 }
