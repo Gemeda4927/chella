@@ -1,6 +1,6 @@
+import 'package:chella/features/Authentication/login/presentation/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:chella/core/theme/app_theme.dart';
-import 'package:chella/features/Authentication/presentation/pages/login_page.dart';
 
 void main() {
   runApp(const MyApp());
