@@ -1,8 +1,13 @@
-import 'package:chella/core/constants/auth_constants.dart';
-import 'package:chella/features/Authentication/login/presentation/widgets/AuthTextField%20.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:chella/core/constants/auth_constants.dart';
 import 'package:chella/core/constants/string_constants.dart';
-import 'package:chella/features/Authentication/register/presentation/pages/register_page.dart'; // Add this import
+import 'package:chella/features/Authentication/register/presentation/pages/register_page.dart';
+import 'package:chella/features/Authentication/home/home_screen.dart';
+
+import '../provider/auth_provder.dart';
+import '../widgets/AuthTextField .dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,7 +17,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _formkey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -23,18 +28,53 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void login() {
-    if (_formkey.currentState!.validate()) {
+  void _login() async {
+    if (_formKey.currentState!.validate()) {
       final username = _usernameController.text.trim();
       final password = _passwordController.text.trim();
 
-      print('Username: $username');
-      print('Password: $password');
+      final authProvider = context.read<AuthProvider>();
+      await authProvider.login(username, password);
+
+      if (authProvider.user != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Welcome back, ${authProvider.user!.username}!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        _usernameController.clear();
+        _passwordController.clear();
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      } else if (authProvider.error != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(authProvider.error!),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Something went wrong. Please try again.'),
+            backgroundColor: Colors.orange,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProvider>();
+
     return Scaffold(
       body: Container(
         color: kWhite,
@@ -42,27 +82,20 @@ class _LoginPageState extends State<LoginPage> {
         child: Center(
           child: SingleChildScrollView(
             child: Form(
-              key: _formkey,
+              key: _formKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Column(
-                    children: [
-                      Text(
-                        StringConstants.appName,
-                        style: Theme.of(context).textTheme.displayLarge,
-                      ),
-                      const SizedBox(height: kPaddingS),
-                      Text(
-                        StringConstants.welcomeBack,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                    ],
+                  Text(
+                    StringConstants.appName,
+                    style: Theme.of(context).textTheme.displayLarge,
                   ),
-              
+                  const SizedBox(height: kPaddingS),
+                  Text(
+                    StringConstants.loginTitle,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                   const SizedBox(height: kPadding4XL),
-              
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(kPadding2XL),
@@ -82,13 +115,6 @@ class _LoginPageState extends State<LoginPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          StringConstants.loginTitle,
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
-              
-                        const SizedBox(height: kPadding3XL),
-              
-                        Text(
                           StringConstants.usernameLabel,
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
@@ -97,9 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                           hintText: StringConstants.usernameHint,
                           controller: _usernameController,
                         ),
-              
                         const SizedBox(height: kPadding2XL),
-              
                         Text(
                           StringConstants.passwordLabel,
                           style: Theme.of(context).textTheme.bodyMedium,
@@ -110,9 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                           obscureText: true,
                           controller: _passwordController,
                         ),
-              
                         const SizedBox(height: kPaddingXL),
-              
                         Align(
                           alignment: Alignment.centerRight,
                           child: GestureDetector(
@@ -123,20 +145,26 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
-              
                         const SizedBox(height: kPadding2XL),
-              
-                        const Divider(color: kGrey300, height: 1, thickness: 1),
-              
+                        const Divider(color: kGrey300),
                         const SizedBox(height: kPadding2XL),
-              
-                        ElevatedButton(
-                          onPressed: login,
-                          child: Text(StringConstants.loginButton),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: authProvider.loading ? null : _login,
+                            child: authProvider.loading
+                                ? const CircularProgressIndicator()
+                                : Text(StringConstants.loginButton),
+                          ),
                         ),
-              
+                        if (authProvider.error != null) ...[
+                          const SizedBox(height: kPaddingM),
+                          Text(
+                            authProvider.error!,
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ],
                         const SizedBox(height: kPadding2XL),
-              
                         Center(
                           child: Column(
                             children: [
@@ -147,11 +175,10 @@ class _LoginPageState extends State<LoginPage> {
                               const SizedBox(height: kPaddingS),
                               GestureDetector(
                                 onTap: () {
-                                  // Navigation added here
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const RegisterPage(),
+                                      builder: (_) => const RegisterPage(),
                                     ),
                                   );
                                 },
@@ -163,9 +190,7 @@ class _LoginPageState extends State<LoginPage> {
                             ],
                           ),
                         ),
-              
                         const SizedBox(height: kPaddingL),
-              
                         Center(
                           child: Text(
                             StringConstants.terms,

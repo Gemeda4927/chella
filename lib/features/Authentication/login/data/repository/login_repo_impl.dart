@@ -1,26 +1,20 @@
-import 'package:chella/features/Authentication/login/data/model/user_model.dart';
-import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
+import '../services/auth_service.dart';
+import '../../domain/enitity/user_entity.dart';
+import '../../domain/repository/repository.dart';
 
-class AuthRepository {
-  final Dio _dio;
+class AuthRepositoryImpl implements AuthRepository {
+  final AuthService _service;
 
-  AuthRepository(http.Client client)
-    : _dio = Dio(
-        BaseOptions(
-          baseUrl: '',
-          connectTimeout: const Duration(seconds: 30),
-          receiveTimeout: const Duration(seconds: 30),
-        ),
-      );
+  AuthRepositoryImpl(this._service);
 
-  Future<UserModel> login(String username, String Password) async {
-    try {
-      final resonse = await _dio.get('/login');
-
-      return UserModel.fromJson(resonse.data);
-    } catch (e) {
-      throw Exception('Rakkoon wayii muudateera innis : $e');
-    }
+  @override
+  Future<UserEntity> login(String username, String password) async {
+    final userModel = await _service.login(username, password);
+    return UserEntity(
+      id: userModel.id,
+      username: userModel.username,
+      password: userModel.password,
+      role: userModel.role,
+    );
   }
 }
