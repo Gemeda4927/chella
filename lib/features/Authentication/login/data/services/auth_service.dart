@@ -1,14 +1,17 @@
 import 'package:dio/dio.dart';
+
+import '../../../../../core/handlers/dio_client.dart';
 import '../model/user_model.dart';
 
 class AuthService {
-  final Dio dio;
+  final DioClient _dioClient;
 
-  AuthService(this.dio);
+  AuthService(this._dioClient);
 
   Future<UserModel> login(String username, String password) async {
+    // print('Username is ' , $user)
     try {
-      final response = await dio.post(
+      final response = await _dioClient.post(
         'users/login',
         data: {'username': username, 'password': password},
       );
