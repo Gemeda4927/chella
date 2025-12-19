@@ -1,5 +1,6 @@
 class RegisterModel {
   final String? id;
+  final String? accessToken;
   final String username;
   final String fullName;
   final String? password;
@@ -11,6 +12,7 @@ class RegisterModel {
 
   RegisterModel({
     this.id,
+    this.accessToken,
     required this.username,
     required this.fullName,
     this.password,
@@ -21,21 +23,13 @@ class RegisterModel {
     this.totalReferred = 0,
   });
 
-  // For creating new user (request)
-  Map<String, dynamic> toCreateJson() {
-    return {
-      'fullName': fullName.trim(),
-      'username': username,
-      'password': password,
-      if (referredBy != null) 'referredBy': referredBy,
-    };
-  }
 
-  // For response data
+
   factory RegisterModel.fromJson(Map<String, dynamic> json) {
     return RegisterModel(
       id: json['id'] as String?,
       username: json['username'] as String,
+      accessToken: json['accessToken'] as String,
       fullName: json['fullName'] as String,
       referralCode: json['referralCode'] as String?,
       referredBy: json['referredBy'] as String?,
@@ -45,7 +39,6 @@ class RegisterModel {
     );
   }
 
-  // For sending updates
   Map<String, dynamic> toJson() {
     return {
       if (id != null) 'id': id,

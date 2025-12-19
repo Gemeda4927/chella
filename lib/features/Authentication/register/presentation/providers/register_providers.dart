@@ -1,11 +1,11 @@
-import 'package:chella/features/Authentication/register/doamin/enitiy/RegisterEntity.dart';
+import 'package:chella/features/Authentication/register/data/model/register_model.dart';
 import 'package:chella/features/Authentication/register/doamin/usecases/register_usecase.dart';
 import 'package:flutter/widgets.dart';
 
 class RegisterProvider extends ChangeNotifier {
   final RegisterUseCase _registerUseCase;
 
-  Registerentity? _currentUser;
+  RegisterModel? _currentUser;
   bool _loading = false;
   String? _error;
   bool _isSuccess = false;
@@ -14,7 +14,7 @@ class RegisterProvider extends ChangeNotifier {
 
   // Getters
   bool get loading => _loading;
-  Registerentity? get user => _currentUser;
+  RegisterModel? get user => _currentUser;
   String? get error => _error;
   bool get isSuccess => _isSuccess;
 
@@ -30,13 +30,11 @@ class RegisterProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _currentUser =
-          (await _registerUseCase.execute(
-                fullName: fullName,
-                username: username,
-                password: password,
-              ))
-              as Registerentity?;
+      _currentUser = (await _registerUseCase.execute(
+        fullName: fullName,
+        username: username,
+        password: password,
+      ));
       _isSuccess = true;
     } catch (e) {
       _error = e.toString();

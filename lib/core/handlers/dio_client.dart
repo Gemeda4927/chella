@@ -6,7 +6,7 @@ class DioClient {
   DioClient() {
     _dio = Dio(
       BaseOptions(
-        baseUrl: 'http://192.168.1.6:4000/chella-api/',
+        baseUrl: 'https://chella-api.onrender.com/chella-api/',
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         sendTimeout: const Duration(seconds: 30),

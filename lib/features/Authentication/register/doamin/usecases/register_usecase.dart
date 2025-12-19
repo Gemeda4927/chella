@@ -7,7 +7,7 @@ class RegisterUseCase {
 
   RegisterUseCase(this._repository);
 
-  Future<RegisterModel> execute({
+  Future<RegisterModel> execute( {
     required String fullName,
     required String username,
     required String password,

@@ -1,17 +1,27 @@
 class UserEntity {
-  final String? id;
+  final String id;
   final String username;
-  final String? role;
-  final String password;
+  final String fullName;
+  final String accessToken;
+
+  final String referralCode;
+  final String refferedBy;
+
+  final int amount;
+  final int totalEarned;
+  final int totalReffered;
 
   const UserEntity({
-    this.id,
+    required this.id,
     required this.username,
-    required this.password,
-    this.role,
+    required this.fullName,
+    required this.accessToken,
+    required this.referralCode,
+    required this.refferedBy,
+    required this.amount,
+    required this.totalEarned,
+    required this.totalReffered,
   });
 
-  String welcomeBack() {
-    return 'Welcome back, $username';
-  }
+  String welcomeBack() => 'Welcome back, $fullName';
 }

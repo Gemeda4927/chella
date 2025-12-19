@@ -15,6 +15,7 @@ class AuthService {
         'users/login',
         data: {'username': username, 'password': password},
       );
+      // print(Response)
       return UserModel.fromJson(response.data);
     } on DioException catch (e) {
       throw Exception(e.response?.data['message'] ?? 'Login failed');
