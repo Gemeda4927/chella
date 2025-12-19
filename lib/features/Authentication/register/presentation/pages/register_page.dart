@@ -1,3 +1,4 @@
+import 'package:chella/features/Authentication/home/home_screen.dart';
 import 'package:chella/features/Authentication/login/presentation/widgets/AuthTextField%20.dart';
 import 'package:chella/features/Authentication/register/presentation/providers/register_providers.dart'
     show RegisterProvider;
@@ -17,7 +18,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
@@ -29,7 +29,6 @@ class _RegisterPageState extends State<RegisterPage> {
   void dispose() {
     _fullNameController.dispose();
     _usernameController.dispose();
-    _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -61,47 +60,35 @@ class _RegisterPageState extends State<RegisterPage> {
         SnackBar(
           content: const Text('Account created successfully!'),
           backgroundColor: kPrimaryYellow,
+          duration: const Duration(seconds: 2),
         ),
       );
+
+      Future.delayed(const Duration(milliseconds: 500), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+        provider.reset();
+      });
     } else if (provider.error != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(provider.error!), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text(provider.error!),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 3),
+        ),
       );
+      provider.reset();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<RegisterProvider>(
-      builder: (context, provider, child) {
-        if (provider.isSuccess) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text('Account created successfully!'),
-                backgroundColor: kPrimaryYellow,
-                duration: const Duration(seconds: 2),
-              ),
-            );
-            provider.reset();
-          });
-        }
-
-        if (provider.error != null) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(provider.error!),
-                backgroundColor: Colors.red,
-                duration: const Duration(seconds: 3),
-              ),
-            );
-            provider.reset();
-          });
-        }
-
-        return Scaffold(
-          body: Container(
+    return Scaffold(
+      body: Consumer<RegisterProvider>(
+        builder: (context, provider, child) {
+          return Container(
             color: kWhite,
             padding: const EdgeInsets.all(kPaddingXL),
             child: Center(
@@ -109,9 +96,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Form(
                   key: _formKey,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      // App Name & Title
                       Column(
                         children: [
                           Text(
@@ -126,6 +113,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         ],
                       ),
                       const SizedBox(height: kPadding4XL),
+
+                      // Form Container
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(kPadding2XL),
@@ -149,10 +138,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               style: Theme.of(context).textTheme.headlineMedium,
                             ),
                             const SizedBox(height: kPadding3XL),
-                            Text(
-                              StringConstants.fullNameLabel,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
+
+                            // Full Name
+                            Text(StringConstants.fullNameLabel),
                             const SizedBox(height: kPaddingS),
                             AuthTextField(
                               hintText: StringConstants.fullNameHint,
@@ -165,10 +153,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               },
                             ),
                             const SizedBox(height: kPaddingL),
-                            Text(
-                              StringConstants.usernameLabel,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
+
+                            // Username
+                            Text(StringConstants.usernameLabel),
                             const SizedBox(height: kPaddingS),
                             AuthTextField(
                               hintText: StringConstants.usernameHint,
@@ -184,32 +171,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               },
                             ),
                             const SizedBox(height: kPaddingL),
-                            Text(
-                              StringConstants.emailLabel,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                            const SizedBox(height: kPaddingS),
-                            AuthTextField(
-                              hintText: StringConstants.emailHint,
-                              controller: _emailController,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter your email';
-                                }
-                                final emailRegex = RegExp(
-                                  r'^[^@]+@[^@]+\.[^@]+',
-                                );
-                                if (!emailRegex.hasMatch(value)) {
-                                  return 'Please enter a valid email';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: kPaddingL),
-                            Text(
-                              StringConstants.passwordLabel,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
+
+                            // Password
+                            Text(StringConstants.passwordLabel),
                             const SizedBox(height: kPaddingS),
                             TextFormField(
                               controller: _passwordController,
@@ -227,10 +191,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                 hintText: StringConstants.passwordHint,
                                 filled: true,
                                 fillColor: kGrey50,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: kPaddingL,
-                                  vertical: kPaddingM,
-                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(
                                     kBorderRadiusM,
@@ -245,19 +205,17 @@ class _RegisterPageState extends State<RegisterPage> {
                                     color: kGrey600,
                                   ),
                                   onPressed: () {
-                                    setState(
-                                      () =>
-                                          _obscurePassword = !_obscurePassword,
-                                    );
+                                    setState(() {
+                                      _obscurePassword = !_obscurePassword;
+                                    });
                                   },
                                 ),
                               ),
                             ),
                             const SizedBox(height: kPaddingL),
-                            Text(
-                              StringConstants.confirmPasswordLabel,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
+
+                            // Confirm Password
+                            Text(StringConstants.confirmPasswordLabel),
                             const SizedBox(height: kPaddingS),
                             TextFormField(
                               controller: _confirmPasswordController,
@@ -275,10 +233,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                 hintText: StringConstants.confirmPasswordHint,
                                 filled: true,
                                 fillColor: kGrey50,
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: kPaddingL,
-                                  vertical: kPaddingM,
-                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(
                                     kBorderRadiusM,
@@ -293,53 +247,17 @@ class _RegisterPageState extends State<RegisterPage> {
                                     color: kGrey600,
                                   ),
                                   onPressed: () {
-                                    setState(
-                                      () => _obscureConfirmPassword =
-                                          !_obscureConfirmPassword,
-                                    );
+                                    setState(() {
+                                      _obscureConfirmPassword =
+                                          !_obscureConfirmPassword;
+                                    });
                                   },
                                 ),
                               ),
                             ),
                             const SizedBox(height: kPaddingXL),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: kPaddingS,
-                              ),
-                              child: RichText(
-                                textAlign: TextAlign.center,
-                                text: TextSpan(
-                                  style: Theme.of(context).textTheme.labelSmall,
-                                  children: [
-                                    const TextSpan(
-                                      text: 'By signing up, you agree to our ',
-                                    ),
-                                    TextSpan(
-                                      text: 'Terms of Service',
-                                      style: TextStyle(
-                                        color: kPrimaryYellow,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const TextSpan(text: ' and '),
-                                    TextSpan(
-                                      text: 'Privacy Policy',
-                                      style: TextStyle(
-                                        color: kPrimaryYellow,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: kPadding2XL),
-                            const Divider(
-                              color: kGrey300,
-                              height: 1,
-                              thickness: 1,
-                            ),
-                            const SizedBox(height: kPadding2XL),
+
+                            // Register Button
                             ElevatedButton(
                               onPressed: provider.loading
                                   ? null
@@ -355,33 +273,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                     )
                                   : Text(StringConstants.registerButton),
                             ),
-                            const SizedBox(height: kPadding2XL),
-                            Center(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    StringConstants.alreadyHaveAccount,
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodySmall,
-                                  ),
-                                  const SizedBox(height: kPaddingS),
-                                  GestureDetector(
-                                    onTap: provider.loading
-                                        ? null
-                                        : () {
-                                            Navigator.pop(context);
-                                          },
-                                    child: Text(
-                                      StringConstants.loginInstead,
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.labelLarge,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
                           ],
                         ),
                       ),
@@ -390,9 +281,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

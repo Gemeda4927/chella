@@ -9,6 +9,7 @@ class RegisterProvider extends ChangeNotifier {
   bool _loading = false;
   String? _error;
   bool _isSuccess = false;
+  bool _isRegistered = false;
 
   RegisterProvider(this._registerUseCase);
 
@@ -17,6 +18,7 @@ class RegisterProvider extends ChangeNotifier {
   RegisterModel? get user => _currentUser;
   String? get error => _error;
   bool get isSuccess => _isSuccess;
+  bool get isRegistered => _isRegistered;
 
   // Actions
   Future<void> register({
@@ -27,18 +29,21 @@ class RegisterProvider extends ChangeNotifier {
     _loading = true;
     _error = null;
     _isSuccess = false;
+    _isRegistered = false;
     notifyListeners();
 
     try {
-      _currentUser = (await _registerUseCase.execute(
+      _currentUser = await _registerUseCase.execute(
         fullName: fullName,
         username: username,
         password: password,
-      ));
+      );
       _isSuccess = true;
+      _isRegistered = true;
     } catch (e) {
       _error = e.toString();
       _isSuccess = false;
+      _isRegistered = false;
     }
 
     _loading = false;
@@ -50,6 +55,7 @@ class RegisterProvider extends ChangeNotifier {
     _loading = false;
     _error = null;
     _isSuccess = false;
+    _isRegistered = false; // reset
     notifyListeners();
   }
 }

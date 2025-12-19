@@ -3,39 +3,35 @@ class RegisterModel {
   final String? accessToken;
   final String username;
   final String fullName;
-  final String? password;
   final String? referralCode;
-  final String? referredBy;
-  final int? amount;
-  final int? totalEarned;
-  final int? totalReferred;
+  final String? refferedBy; // match API spelling
+  final int amount;
+  final int totalEarned;
+  final int totalReffered; // match API spelling
 
   RegisterModel({
     this.id,
     this.accessToken,
     required this.username,
     required this.fullName,
-    this.password,
     this.referralCode,
-    this.referredBy,
+    this.refferedBy,
     this.amount = 0,
     this.totalEarned = 0,
-    this.totalReferred = 0,
+    this.totalReffered = 0,
   });
-
-
 
   factory RegisterModel.fromJson(Map<String, dynamic> json) {
     return RegisterModel(
       id: json['id'] as String?,
-      username: json['username'] as String,
-      accessToken: json['accessToken'] as String,
-      fullName: json['fullName'] as String,
+      username: json['username'] as String? ?? "",
+      accessToken: json['accessToken'] as String?, // can be null
+      fullName: json['fullName'] as String? ?? "",
       referralCode: json['referralCode'] as String?,
-      referredBy: json['referredBy'] as String?,
+      refferedBy: json['refferedBy'] as String?, // nullable
       amount: json['amount'] as int? ?? 0,
       totalEarned: json['totalEarned'] as int? ?? 0,
-      totalReferred: json['totalReferred'] as int? ?? 0,
+      totalReffered: json['totalReffered'] as int? ?? 0,
     );
   }
 
@@ -44,11 +40,12 @@ class RegisterModel {
       if (id != null) 'id': id,
       'username': username,
       'fullName': fullName.trim(),
+      if (accessToken != null) 'accessToken': accessToken,
       if (referralCode != null) 'referralCode': referralCode,
-      if (referredBy != null) 'referredBy': referredBy,
-      if (amount != null) 'amount': amount,
-      if (totalEarned != null) 'totalEarned': totalEarned,
-      if (totalReferred != null) 'totalReferred': totalReferred,
+      if (refferedBy != null) 'refferedBy': refferedBy,
+      'amount': amount,
+      'totalEarned': totalEarned,
+      'totalReffered': totalReffered,
     };
   }
 }

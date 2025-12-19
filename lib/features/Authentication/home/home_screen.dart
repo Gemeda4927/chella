@@ -16,6 +16,13 @@ class HomeScreen extends StatelessWidget {
       builder: (context, authProvider, child) {
         final user = authProvider.user;
 
+        // Show a loading indicator if user data is not yet available
+        if (user == null) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
         return Scaffold(
           backgroundColor: kBackgroundColor,
           appBar: AppBar(
@@ -26,7 +33,7 @@ class HomeScreen extends StatelessWidget {
               children: [
                 const Text('Dashboard', style: kTitleTextStyle),
                 Text(
-                  'Hello, ${user?.fullName.split(' ').first}',
+                  'Hello, ${user.fullName.split(' ').first}',
                   style: kSubTitleTextStyle,
                 ),
               ],
@@ -54,10 +61,7 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ProfileHeader(
-                  fullName: user!.fullName,
-                  username: user.username,
-                ),
+                ProfileHeader(fullName: user.fullName, username: user.username),
                 const SizedBox(height: 24),
                 const Text('Account Overview', style: kTitleTextStyle),
                 const SizedBox(height: 16),
@@ -129,7 +133,7 @@ class HomeScreen extends StatelessWidget {
                       DetailItem(
                         icon: Icons.group_add_rounded,
                         label: 'Referred By',
-                        value: user.refferedBy.isNotEmpty
+                        value: (user.refferedBy.isNotEmpty)
                             ? user.refferedBy
                             : 'Not referred',
                         isLast: true,
@@ -161,9 +165,7 @@ class HomeScreen extends StatelessWidget {
               Navigator.pop(context);
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const LoginPage(),
-                ),
+                MaterialPageRoute(builder: (context) => const LoginPage()),
                 (route) => false,
               );
             },
