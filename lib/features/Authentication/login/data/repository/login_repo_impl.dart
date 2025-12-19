@@ -10,11 +10,17 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<UserEntity> login(String username, String password) async {
     final userModel = await _service.login(username, password);
+
     return UserEntity(
       id: userModel.id,
       username: userModel.username,
-      password: userModel.password,
-      role: userModel.role,
+      fullName: userModel.fullName,
+      accessToken: userModel.accessToken,
+      referralCode: userModel.referralCode,
+      refferedBy: userModel.refferedBy,
+      amount: userModel.amount,
+      totalEarned: userModel.totalEarned,
+      totalReffered: userModel.totalReffered,
     );
   }
 }

@@ -1,27 +1,21 @@
-class UserEntity {
+class Registerentity {
   final String id;
   final String username;
   final String fullName;
-  final String accessToken;
-
   final String referralCode;
-  final String refferedBy;
-
+  final String? referredBy;
   final int amount;
   final int totalEarned;
-  final int totalReffered;
+  final int totalReferred;
 
-  const UserEntity({
+  Registerentity({
     required this.id,
     required this.username,
     required this.fullName,
-    required this.accessToken,
     required this.referralCode,
-    required this.refferedBy,
+    this.referredBy,
     required this.amount,
     required this.totalEarned,
-    required this.totalReffered,
+    required this.totalReferred,
   });
-
-  String welcomeBack() => 'Welcome back, $fullName';
 }
