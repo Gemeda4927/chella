@@ -25,6 +25,8 @@ void main() {
             final repository = AuthRepositoryImpl(authService);
             final loginUseCase = LoginUseCase(repository);
             return AuthProvider(loginUseCase);
+
+            // auth => usecase => repo=> repoimpmation => service => beed ApiClient 
           },
         ),
 

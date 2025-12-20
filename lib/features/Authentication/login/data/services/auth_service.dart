@@ -19,7 +19,7 @@ class AuthService {
       final user = RegisterModel.fromJson(response.data);
 
       return user;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       final statusCode = e.response?.statusCode ?? 0;
       final message = e.response?.data['message'] ?? e.message;
 

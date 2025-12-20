@@ -19,7 +19,6 @@ class DioClient {
       ),
     );
 
-    // Logging interceptor
     _dio.interceptors.add(
       LogInterceptor(
         request: true,
@@ -30,7 +29,6 @@ class DioClient {
       ),
     );
 
-    // Token interceptor
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -41,14 +39,12 @@ class DioClient {
           return handler.next(options);
         },
         onError: (DioException e, handler) {
-          // Just pass DioError to the service/repository
           return handler.next(e);
         },
       ),
     );
   }
 
-  // GET
   Future<Response<T>> get<T>(
     String path, {
     Map<String, dynamic>? queryParameters,
@@ -61,7 +57,6 @@ class DioClient {
     );
   }
 
-  // POST
   Future<Response<T>> post<T>(
     String path, {
     dynamic data,
@@ -76,7 +71,6 @@ class DioClient {
     );
   }
 
-  // PUT
   Future<Response<T>> put<T>(
     String path, {
     dynamic data,
@@ -91,7 +85,6 @@ class DioClient {
     );
   }
 
-  // PATCH
   Future<Response<T>> patch<T>(
     String path, {
     dynamic data,
@@ -106,7 +99,6 @@ class DioClient {
     );
   }
 
-  // DELETE
   Future<Response<T>> delete<T>(
     String path, {
     dynamic data,

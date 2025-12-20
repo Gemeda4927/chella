@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:chella/features/Authentication/register/presentation/providers/register_providers.dart';
-import 'package:chella/features/Authentication/home/home_screen.dart';
+import 'package:chella/home/home_screen.dart';
 import 'package:chella/features/Authentication/login/presentation/widgets/AuthTextField%20.dart';
 import 'package:chella/core/constants/auth_constants.dart';
 import 'package:chella/core/constants/string_constants.dart';
