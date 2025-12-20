@@ -97,6 +97,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      // App Name & Title
                       Column(
                         children: [
                           Text(
@@ -111,6 +112,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         ],
                       ),
                       const SizedBox(height: kPadding4XL),
+
+                      // Form Container
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(kPadding2XL),
