@@ -30,6 +30,4 @@ class AuthProvider with ChangeNotifier {
     _loading = false;
     notifyListeners();
   }
-
-  
 }

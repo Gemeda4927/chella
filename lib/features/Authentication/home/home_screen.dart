@@ -16,7 +16,6 @@ class HomeScreen extends StatelessWidget {
       builder: (context, authProvider, child) {
         final user = authProvider.user;
 
-        // Show a loading indicator if user data is not yet available
         if (user == null) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
