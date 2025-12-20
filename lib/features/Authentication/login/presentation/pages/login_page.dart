@@ -1,3 +1,5 @@
+import 'package:chella/features/Authentication/login/presentation/provider/auth_provder.dart';
+import 'package:chella/features/Authentication/login/presentation/widgets/AuthTextField%20.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -5,9 +7,7 @@ import 'package:chella/core/constants/auth_constants.dart';
 import 'package:chella/core/constants/string_constants.dart';
 import 'package:chella/features/Authentication/register/presentation/pages/register_page.dart';
 import 'package:chella/features/Authentication/home/home_screen.dart';
-
-import '../provider/auth_provder.dart';
-import '../widgets/AuthTextField .dart';
+import 'package:chella/core/network/token_manager.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -20,6 +20,23 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TokenManager _tokenManager = TokenManager();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkToken();
+  }
+
+  void _checkToken() async {
+    final token = await _tokenManager.getAccessToken();
+    if (token != null && token.isNotEmpty) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
+    }
+  }
 
   @override
   void dispose() {
@@ -29,45 +46,42 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _login() async {
-    if (_formKey.currentState!.validate()) {
-      final username = _usernameController.text.trim();
-      final password = _passwordController.text.trim();
+    if (!_formKey.currentState!.validate()) return;
 
-      final authProvider = context.read<AuthProvider>();
-      await authProvider.login(username, password);
+    final username = _usernameController.text.trim();
+    final password = _passwordController.text.trim();
 
-      if (authProvider.user != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Welcome back, ${authProvider.user!.username}!'),
-            backgroundColor: Colors.green,
-          ),
-        );
+    final authProvider = context.read<AuthProvider>();
+    await authProvider.login(username, password);
 
-        _usernameController.clear();
-        _passwordController.clear();
+    if (authProvider.user != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Welcome back, ${authProvider.user!.username}!'),
+          backgroundColor: Colors.green,
+        ),
+      );
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-        );
-      } else if (authProvider.error != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(authProvider.error!),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Something went wrong. Please try again.'),
-            backgroundColor: Colors.orange,
-            duration: Duration(seconds: 3),
-          ),
-        );
-      }
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
+    } else if (authProvider.error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(authProvider.error!),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Something went wrong. Please try again.'),
+          backgroundColor: Colors.orange,
+          duration: Duration(seconds: 3),
+        ),
+      );
     }
   }
 

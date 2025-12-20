@@ -1,11 +1,14 @@
-import 'package:chella/features/Authentication/register/data/model/register_model.dart';
-import 'package:chella/features/Authentication/register/doamin/usecases/register_usecase.dart';
+import 'package:chella/features/Authentication/login/data/model/user_model.dart';
 import 'package:flutter/widgets.dart';
+import 'package:chella/core/network/token_manager.dart';
+
+import '../../doamin/usecases/register_usecase.dart';
 
 class RegisterProvider extends ChangeNotifier {
   final RegisterUseCase _registerUseCase;
+  final TokenManager _tokenManager = TokenManager();
 
-  RegisterModel? _currentUser;
+  RegisterModel? _currentUser; // nullable
   bool _loading = false;
   String? _error;
   bool _isSuccess = false;
@@ -13,14 +16,12 @@ class RegisterProvider extends ChangeNotifier {
 
   RegisterProvider(this._registerUseCase);
 
-  // Getters
   bool get loading => _loading;
-  RegisterModel? get user => _currentUser;
+  RegisterModel? get user => _currentUser; // nullable getter
   String? get error => _error;
   bool get isSuccess => _isSuccess;
   bool get isRegistered => _isRegistered;
 
-  // Actions
   Future<void> register({
     required String fullName,
     required String username,
@@ -33,21 +34,28 @@ class RegisterProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _currentUser = await _registerUseCase.execute(
-        fullName: fullName,
-        username: username,
-        password: password,
-      );
+      _currentUser =
+          (await _registerUseCase.execute(
+                fullName: fullName,
+                username: username,
+                password: password,
+              ))
+              as RegisterModel?;
+
+      if (_currentUser?.accessToken != null) {
+        await _tokenManager.saveAccessToken(_currentUser!.accessToken);
+      }
+
       _isSuccess = true;
       _isRegistered = true;
     } catch (e) {
       _error = e.toString();
       _isSuccess = false;
       _isRegistered = false;
+    } finally {
+      _loading = false;
+      notifyListeners();
     }
-
-    _loading = false;
-    notifyListeners();
   }
 
   void reset() {
@@ -55,7 +63,7 @@ class RegisterProvider extends ChangeNotifier {
     _loading = false;
     _error = null;
     _isSuccess = false;
-    _isRegistered = false; // reset
+    _isRegistered = false;
     notifyListeners();
   }
 }

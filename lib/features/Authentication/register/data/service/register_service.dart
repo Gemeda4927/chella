@@ -1,6 +1,8 @@
-import 'package:chella/features/Authentication/register/data/model/register_model.dart';
 import 'package:dio/dio.dart';
-import '../../../../../core/handlers/dio_client.dart';
+import '../../../../../core/network/dio_client.dart';
+import '../../../../../core/network/api_exceptions.dart';
+import '../../../../../core/network/api_endpoints.dart';
+import '../model/register_model.dart';
 
 class RegisterService {
   final DioClient _dioClient;
@@ -14,16 +16,35 @@ class RegisterService {
   }) async {
     try {
       final response = await _dioClient.post(
-        'users/register',
+        Endpoints.register,
         data: {
           'fullName': fullName,
           'username': username,
           'password': password,
         },
       );
-      return RegisterModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw Exception(e.response?.data['message'] ?? 'Registration failed');
+
+      final user = RegisterModel.fromJson(response.data);
+
+      return user.copyWith(isRegistered: true);
+    } on DioError catch (e) {
+      final statusCode = e.response?.statusCode ?? 0;
+      final message = e.response?.data['message'] ?? e.message;
+
+      switch (statusCode) {
+        case 400:
+          throw BadRequestException(message);
+        case 401:
+          throw UnauthorizedException(message);
+        case 403:
+          throw ForbiddenException(message);
+        case 404:
+          throw NotFoundException(message);
+        case 500:
+          throw ServerException(message);
+        default:
+          throw ApiException(message, statusCode: statusCode);
+      }
     }
   }
 }

@@ -5,7 +5,7 @@ import 'package:chella/features/Authentication/register/presentation/providers/r
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:chella/core/handlers/dio_client.dart';
+import 'package:chella/core/network/dio_client.dart';
 import 'package:chella/core/theme/app_theme.dart';
 
 import 'features/Authentication/login/data/services/auth_service.dart';

@@ -1,9 +1,8 @@
-import 'package:chella/features/Authentication/home/home_screen.dart';
-import 'package:chella/features/Authentication/login/presentation/widgets/AuthTextField%20.dart';
-import 'package:chella/features/Authentication/register/presentation/providers/register_providers.dart'
-    show RegisterProvider;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:chella/features/Authentication/register/presentation/providers/register_providers.dart';
+import 'package:chella/features/Authentication/home/home_screen.dart';
+import 'package:chella/features/Authentication/login/presentation/widgets/AuthTextField%20.dart';
 import 'package:chella/core/constants/auth_constants.dart';
 import 'package:chella/core/constants/string_constants.dart';
 
@@ -48,14 +47,14 @@ class _RegisterPageState extends State<RegisterPage> {
     );
 
     await provider.register(
-      fullName: _fullNameController.text,
-      username: _usernameController.text,
+      fullName: _fullNameController.text.trim(),
+      username: _usernameController.text.trim(),
       password: _passwordController.text,
     );
 
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-    if (provider.isSuccess) {
+    if (provider.isRegistered) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Account created successfully!'),
@@ -67,7 +66,7 @@ class _RegisterPageState extends State<RegisterPage> {
       Future.delayed(const Duration(milliseconds: 500), () {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
         );
         provider.reset();
       });
@@ -138,8 +137,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               style: Theme.of(context).textTheme.headlineMedium,
                             ),
                             const SizedBox(height: kPadding3XL),
-
-                            // Full Name
                             Text(StringConstants.fullNameLabel),
                             const SizedBox(height: kPaddingS),
                             AuthTextField(
@@ -153,8 +150,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               },
                             ),
                             const SizedBox(height: kPaddingL),
-
-                            // Username
                             Text(StringConstants.usernameLabel),
                             const SizedBox(height: kPaddingS),
                             AuthTextField(
@@ -171,8 +166,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               },
                             ),
                             const SizedBox(height: kPaddingL),
-
-                            // Password
                             Text(StringConstants.passwordLabel),
                             const SizedBox(height: kPaddingS),
                             TextFormField(
@@ -213,8 +206,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                             const SizedBox(height: kPaddingL),
-
-                            // Confirm Password
                             Text(StringConstants.confirmPasswordLabel),
                             const SizedBox(height: kPaddingS),
                             TextFormField(
@@ -256,8 +247,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                             const SizedBox(height: kPaddingXL),
-
-                            // Register Button
                             ElevatedButton(
                               onPressed: provider.loading
                                   ? null

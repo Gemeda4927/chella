@@ -1,6 +1,6 @@
-import 'package:chella/features/Authentication/register/data/model/register_model.dart';
-import 'package:chella/features/Authentication/register/data/service/register_service.dart';
-import 'package:chella/features/Authentication/register/doamin/repositories/auth_repository.dart';
+import '../model/register_model.dart';
+import '../service/register_service.dart';
+import '../../doamin/repositories/auth_repository.dart';
 
 class RegisterRepositoryImpl implements RegisterRepository {
   final RegisterService _registerService;
@@ -14,12 +14,12 @@ class RegisterRepositoryImpl implements RegisterRepository {
     required String password,
   }) async {
     try {
-      final userModel = await _registerService.register(
+      final registerModel = await _registerService.register(
         fullName: fullName,
         username: username,
         password: password,
       );
-      return userModel;
+      return registerModel;
     } catch (e) {
       rethrow;
     }

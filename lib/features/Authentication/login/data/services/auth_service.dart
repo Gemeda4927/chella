@@ -1,6 +1,7 @@
+import 'package:chella/core/network/api_endpoints.dart';
 import 'package:dio/dio.dart';
-
-import '../../../../../core/handlers/dio_client.dart';
+import '../../../../../core/network/dio_client.dart';
+import '../../../../../core/network/api_exceptions.dart';
 import '../model/user_model.dart';
 
 class AuthService {
@@ -8,17 +9,34 @@ class AuthService {
 
   AuthService(this._dioClient);
 
-  Future<UserModel> login(String username, String password) async {
-    // print('Username is ' , $user)
+  Future<RegisterModel> login(String username, String password) async {
     try {
       final response = await _dioClient.post(
-        'users/login',
+        Endpoints.login,
         data: {'username': username, 'password': password},
       );
-      // print(Response)
-      return UserModel.fromJson(response.data);
-    } on DioException catch (e) {
-      throw Exception(e.response?.data['message'] ?? 'Login failed');
+
+      final user = RegisterModel.fromJson(response.data);
+
+      return user;
+    } on DioError catch (e) {
+      final statusCode = e.response?.statusCode ?? 0;
+      final message = e.response?.data['message'] ?? e.message;
+
+      switch (statusCode) {
+        case 400:
+          throw BadRequestException(message);
+        case 401:
+          throw UnauthorizedException(message);
+        case 403:
+          throw ForbiddenException(message);
+        case 404:
+          throw NotFoundException(message);
+        case 500:
+          throw ServerException(message);
+        default:
+          throw ApiException(message, statusCode: statusCode);
+      }
     }
   }
 }
