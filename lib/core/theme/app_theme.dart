@@ -9,7 +9,7 @@ class AppTheme {
       primaryColor: kPrimaryYellow,
       fontFamily: 'Inter',
       brightness: Brightness.light,
-      
+
       // Clean Text Theme
       textTheme: TextTheme(
         // App Name
@@ -19,56 +19,49 @@ class AppTheme {
           color: kPrimaryYellow,
           height: 1.2,
         ),
-        
-        // Page Titles
+
         headlineMedium: const TextStyle(
           fontSize: kFontSize2XL,
           fontWeight: FontWeight.w700,
           color: kGrey800,
           height: 1.3,
         ),
-        
-        // Subtitles
+
         titleLarge: const TextStyle(
           fontSize: kFontSizeL,
           fontWeight: FontWeight.w400,
           color: kGrey600,
           height: 1.4,
         ),
-        
-        // Form Labels
+
         bodyMedium: const TextStyle(
           fontSize: kFontSizeM,
           fontWeight: FontWeight.w500,
           color: kGrey700,
           height: 1.4,
         ),
-        
-        // Links & Buttons
+
         labelMedium: const TextStyle(
           fontSize: kFontSizeM,
           fontWeight: FontWeight.w500,
           color: kPrimaryYellow,
           height: 1.4,
         ),
-        
-        // Bold Links
+
         labelLarge: const TextStyle(
           fontSize: kFontSizeM,
           fontWeight: FontWeight.w600,
           color: kPrimaryYellow,
           height: 1.4,
         ),
-        
-        // Small Text
+
         bodySmall: const TextStyle(
           fontSize: kFontSizeS,
           fontWeight: FontWeight.w400,
           color: kGrey600,
           height: 1.4,
         ),
-        
-        // Very Small Text
+
         labelSmall: const TextStyle(
           fontSize: kFontSizeXS,
           fontWeight: FontWeight.w400,

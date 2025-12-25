@@ -3,9 +3,6 @@ import 'package:chella/features/Authentication/login/presentation/pages/login_pa
 import 'package:chella/features/Authentication/login/presentation/provider/auth_provder.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'widgets/stat_card.dart';
-import 'widgets/detail_item.dart';
-import 'widgets/profile_header.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
