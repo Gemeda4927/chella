@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:chella/core/constants/auth_constants.dart';
 import 'package:chella/core/constants/string_constants.dart';
 import 'package:chella/features/Authentication/register/presentation/pages/register_page.dart';
-import 'package:chella/home/home_screen.dart';
+
 import 'package:chella/core/network/token_manager.dart';
 
 class LoginPage extends StatefulWidget {
@@ -29,12 +29,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _checkToken() async {
-    final token = await _tokenManager.saveToken();
+    final token = await _tokenManager.getToken();
     if (token != null && token.isNotEmpty) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
-      );
+      Navigator.pushReplacementNamed(context, '/home');
     }
   }
 
@@ -62,10 +59,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
-      );
+      Navigator.pushReplacementNamed(context, '/home');
     } else if (authProvider.error != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

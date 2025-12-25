@@ -42,7 +42,7 @@ class RegisterProvider extends ChangeNotifier {
               as RegisterModel?;
 
       if (_currentUser?.accessToken != null) {
-        await _tokenManager.saveAccessToken(_currentUser!.accessToken);
+        await _tokenManager.getToken();
       }
 
       _isSuccess = true;
