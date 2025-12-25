@@ -1,9 +1,9 @@
 import 'package:chella/core/constants/home_colors.dart';
 import 'package:chella/features/Authentication/login/presentation/provider/auth_provder.dart';
-import 'package:chella/home/widgets/ChellaCard.dart';
-import 'package:chella/home/widgets/CustomAppBar.dart';
-import 'package:chella/home/widgets/CustomBottomNavBar.dart';
-import 'package:chella/home/widgets/GridMenu.dart';
+import 'package:chella/features/home/widgets/ChellaCard.dart';
+import 'package:chella/features/home/widgets/CustomAppBar.dart';
+import 'package:chella/features/home/widgets/CustomBottomNavBar.dart';
+import 'package:chella/features/home/widgets/GridMenu.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

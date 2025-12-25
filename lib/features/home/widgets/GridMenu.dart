@@ -1,5 +1,5 @@
 
-import 'package:chella/home/widgets/SoftMenu.dart';
+import 'package:chella/features/home/widgets/SoftMenu.dart';
 import 'package:flutter/material.dart';
 
 class GridMenu extends StatelessWidget {
